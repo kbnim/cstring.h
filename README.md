@@ -7,7 +7,7 @@
 `String` has the following features:
 * storing string: `myString->string`
   * under the hood, it's a classic `char*` variable, so individual characters can be edited: `myString->string[i]`
-  * it is not protected in any way, so make sure to modify it responsively (i.e. beware the `'\0'`)
+  * it is not protected in any way, so make sure to modify it responsibly (i.e. beware the null-terminating character `'\0'`)
 * storing its length: `myString->length`
 
 They are meant to be used as _pointers_. As such, a string's initialisation looks like this:
