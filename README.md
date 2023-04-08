@@ -33,7 +33,7 @@ There are some auxiliary functions defined, not meant to be used by the general 
 * number of elements: `strArr->count`
 * like a traditional array, it's size cannot be modified - no elements can be added or removed
 
-Note that they're _used as a pointer_ (just like above), even though their name suggests otherwise. Keep in mind that the **number of elements must be declared** when initialising them. It has no way of checking whether the number of stings correspond to the integer value, so it remains the programmer's responsibility.
+Note that they're _used as a pointer_ (just like above), even though their name suggests otherwise. Keep in mind that the **number of elements must be declared** when initialising them. The function has no way of checking whether the number of stings correspond to the given integer value, so it remains the programmer's responsibility.
 ```c
 StringArray* strArr = newStringArray(2, newString("Hello"), newString("World"));
 ````
