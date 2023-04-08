@@ -11,13 +11,13 @@
 * storing its length: `myString->length`
 
 They are meant to be used as _pointers_. As such, a string's initialisation looks like this:
-```
+```c
 String* string01 = newString("Hello, World!");
 String* string02 = newString("");
 ```
 
 Note that we **have to manually delete** it after finishing working with it.
-```
+```c
 deleteString(string01);
 ```
 
@@ -34,17 +34,18 @@ There are some auxiliary functions defined, not meant to be used by the general 
 * like a traditional array, it's size cannot be modified -- no elements can be added or removed
 
 Note that they're _used as a pointer_ (just like above), even though their name suggests otherwise. Keep in mind that the **number of elements must be declared** when initialising them.
-```
+```c
 StringArray* strArr = newStringArray(2, newString("Hello"), newString("World"));
 ````
 
 Deletion is mandatory to avoid memory leak.
-```
+```c
 deleteStringArray(strArr);
 ```
+
 ## Installation
 Coming soon.
 
 ## Further ideas
-* `stringSplit` -- a function splitting a string by "word boundaries" (i.e. separator characters) and making an array out f them
-* `StringList` -- strings using linked lists
+* `stringSplit` - a function splitting a string by "word boundaries" (i.e. separator characters) and making an array out f them
+* `StringList` - strings using linked lists
