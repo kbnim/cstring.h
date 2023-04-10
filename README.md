@@ -72,7 +72,7 @@ insertToList(strList, "inserted element");   // adds string to the given index a
 
 It's possible to remove an element at a given index.
 ```c
-removeFromList(1);
+removeFromList(strList, 1);
 ```
 
 The entire string can be accessed through an index.
@@ -93,5 +93,4 @@ Other functions include:
 Coming soon.
 
 ## Further ideas
-* `stringSplit` - a function splitting a string by "word boundaries" (i.e. separator characters) and making an array out f them
-* `StringList` - strings using linked lists
+* coming soon
