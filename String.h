@@ -6,6 +6,7 @@
 #include <stdarg.h>
 
 static const char DELIMITERS[] = " \t\n\v\f\r";
+static const char PUNCTUATION_MARKS[] = " ,.;:\t\n\v\f\r";
 
 // String functions
 
@@ -32,6 +33,7 @@ StringArray* newStringArray(size_t countArgs, ...);
 void deleteStringArray(StringArray* stringlist);
 StringArray* splitString(const char* string, const char* separators);
 size_t countTokens(String* string, String* separators);
+void printStringArray(StringArray* array, bool index);
 
 // String list (C2L) functions
 
@@ -49,7 +51,13 @@ typedef struct StringList {
 StringH1L* newStringH1L(const char* string, size_t index);
 StringList* newStringList();
 void deleteStringList(StringList* list);
-void appendToList(StringList* list, const char* string);
+void appendToList (StringList* list, const char* string);
+void prependToList(StringList* list, const char* string);
+void insertToList (StringList* list, const char* string, size_t index);
+void refactorIndices(StringList* list);
+StringH1L* listElemAtIndex(StringList* list, size_t index);
 String* listAtIndex(StringList* list, size_t index);
+void printStringList(StringList* list, bool index);
+void removeFromList(StringList* list, size_t index);
 
 #endif

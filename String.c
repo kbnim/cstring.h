@@ -129,7 +129,6 @@ StringArray* splitString(const char* string0, const char* separators0) {
     String* string = newString(string0);
     String* separators = newString(separators0);
     size_t count = countTokens(string, separators);
-    printf("%lu\n", count);
     StringArray* stringarray = calloc(1, sizeof(StringArray));
 
     if (stringarray == NULL) {
@@ -165,6 +164,13 @@ StringArray* splitString(const char* string0, const char* separators0) {
     deleteString(string);
     deleteString(separators);
     return stringarray;
+}
+
+void printStringArray(StringArray* array, bool index) {
+    for (size_t i = 0; i < array->count; i++) {
+        if (index) printf("[%lu]: ", i);
+        printf("%s\n", array->tokens[i]->string);
+    }
 }
 
 // String list functions
@@ -221,6 +227,7 @@ void appendToList(StringList* list, const char* string) {
     StringH1L* node = newStringH1L(string, list->count);
     
     if (node == NULL) {
+        perror("Memory allocation failed");
         return;
     }
 
@@ -239,7 +246,7 @@ void appendToList(StringList* list, const char* string) {
     list->count++;
 }
 
-String* listAtIndex(StringList* list, size_t index) {
+StringH1L* listElemAtIndex(StringList* list, size_t index) {
     if (index >= list->count) {
         perror("List index out of bounds");
         return NULL;
@@ -248,9 +255,93 @@ String* listAtIndex(StringList* list, size_t index) {
     StringH1L* stringAtIndex = list->head;
 
     while (stringAtIndex != NULL) {
-        if (stringAtIndex->index == index) return stringAtIndex->node;
+        if (stringAtIndex->index == index) return stringAtIndex;
         stringAtIndex = stringAtIndex->next;
     }
 
     return NULL;
+}
+
+String* listAtIndex(StringList* list, size_t index) {
+    StringH1L* element = listElemAtIndex(list, index);
+    return (element != NULL) ? element->node : NULL;
+}
+
+void prependToList(StringList* list, const char* string) {
+    if (list == NULL) return;
+
+    StringH1L* newHead = newStringH1L(string, 0);
+
+    if (newHead == NULL) {
+        perror("Memory allocation failed");
+        return;
+    }
+
+    StringH1L* oldHead = list->head;
+    list->head = newHead;
+    list->head->next = oldHead;
+    list->count++;
+    refactorIndices(list);
+}
+
+void insertToList (StringList* list, const char* string, size_t index) {
+    if (list == NULL || index >= list->count) {
+        perror("Some function arguments are invalid");
+        return;
+    }
+
+    // StringH1L* actualElement = list->head;
+    StringH1L* newElement = newStringH1L(string, index);
+    
+    if (newElement == NULL) {
+        perror("Memory allocation failed");
+        return;
+    }
+
+    if (index == 0) {
+        newElement->next = list->head;
+        list->head = newElement;
+    } else {
+        StringH1L* prevElement = list->head;
+
+        for (size_t i = 1; i < index; i++) {
+            prevElement = prevElement->next;
+        }
+
+        newElement->next = prevElement->next;
+        prevElement->next = newElement;
+    }
+
+    list->count++;
+    refactorIndices(list);
+}
+
+void refactorIndices(StringList* list) {
+    StringH1L* actualPointer = list->head;
+
+    for (size_t i = 0; i < list->count && actualPointer != NULL; i++) {
+        if (actualPointer->index != i) {
+            actualPointer->index = i;
+        }
+
+        actualPointer = actualPointer->next;
+    }
+}
+
+void printStringList(StringList* list, bool index) {
+    for (size_t i = 0; i < list->count; i++) {
+        if (index) printf("(%lu): ", i);
+        printf("%s\n", listAtIndex(list, i)->string);
+    }
+}
+
+void removeFromList(StringList* list, size_t index) {
+    StringH1L* prevString = listElemAtIndex(list, index - 1);
+    StringH1L* stringToRemove = listElemAtIndex(list, index);
+    prevString->next = stringToRemove->next;
+    list->count--;
+    refactorIndices(list);
+    stringToRemove->next = NULL;
+    deleteString(stringToRemove->node);
+    free(stringToRemove);
 }
