@@ -10,6 +10,17 @@
   * it is not protected in any way, so make sure to modify it responsibly (i.e. beware the null-terminating character `'\0'`)
 * storing its length: `myString->length`
 
+`String` provides the following functions:
+* constructor
+```c
+String* string01 = newString("Hello, World!");
+String* string02 = newString("");
+```
+* destructor
+```c
+deleteString(string01);
+```
+
 They are meant to be used as _pointers_. As such, a string's initialisation looks like this:
 ```c
 String* string01 = newString("Hello, World!");
@@ -42,6 +53,7 @@ Deletion is mandatory to avoid memory leak.
 ```c
 deleteStringArray(strArr);
 ```
+### StringList
 
 ## Installation
 Coming soon.
