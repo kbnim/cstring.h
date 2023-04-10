@@ -68,6 +68,45 @@ String* stringSegment(String* string, size_t indexStart, size_t indexEnd) {
     return (isValidString(segment)) ? segment : NULL;
 }
 
+String* readString(FILE* source, char* delimiters) {
+    size_t index = 0; 
+    size_t size = 2;
+    int character;
+    char* buffer = malloc(size * sizeof(char));
+
+    if (buffer == NULL) {
+        perror("Memory allocation failed");
+        return NULL;
+    }
+
+    character = getc(source);
+
+    while (character != EOF && strchr(delimiters, character) == NULL) {
+        if (index >= size - 1) {
+            size *= 2;
+            buffer = realloc(buffer, size * sizeof(char));
+            for (size_t i = index; i < size; i++) buffer[i] = '\0';
+        }
+
+        buffer[index] = character;
+        index++;
+        character = getc(source);
+    }
+
+    buffer[index] = '\0';
+    String* output = newString(buffer);
+    free(buffer);
+    return output;
+}
+
+String* readStringWord() {
+    return readString(stdin, " ");
+}
+
+String* readStringLine() {
+    return readString(stdin, "\n");
+}
+
 // String array functions
 
 StringArray* newStringArray(size_t countArgs, ...) {

@@ -21,6 +21,9 @@ bool isValidString(String* string);
 int stringCompare(String* string01, String* string02);
 bool isDelimiter(char character, String* delimiters);
 String* stringSegment(String* string, size_t indexStart, size_t indexEnd);
+String* readString(FILE* source, char* delimiters);
+String* readStringWord();
+String* readStringLine();
 
 // String array functions
 
