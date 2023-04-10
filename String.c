@@ -69,6 +69,8 @@ String* stringSegment(String* string, size_t indexStart, size_t indexEnd) {
 }
 
 String* readString(FILE* source, char* delimiters) {
+    if (feof(source)) return NULL;
+
     size_t index = 0; 
     size_t size = 2;
     int character;
