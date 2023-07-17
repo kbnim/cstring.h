@@ -1,34 +1,33 @@
-# String.h
-`String.h` is an attempt to implement a string type in C. The library contains the following type definitions: `String` and `StringArray`.
+# cstring.h
+`cstring.h` is an attempt to implement a practical string type in C. The library contains the following type definitions: `string` and `strarr` (a linked list of strings).
 
 ## Features
 
-### String
-`String` has the following features:
-* storing string: `myString->string`
-  * under the hood, it's a classic `char*` variable, so individual characters can be edited: `myString->string[i]`
-  * it is not protected in any way, so make sure to modify it responsibly (i.e. beware the null-terminating character `'\0'`)
-* storing its length: `myString->length`
-
-They are meant to be used as _pointers_. As such, a string's initialisation looks like this:
+### string
+`string` offers a safe way to store strings dynamically.
 ```c
-String* string01 = newString("Hello, World!");
-String* string02 = newString("");
+string* str = new_string("Hello, World!");
+delete_string(str);
 ```
-
-Note that we **have to manually delete** it after finishing working with it.
+It comes with the ability to query the length of the string as well as to get the raw, C-style character array to ensure compatibility with the standard library.
 ```c
-deleteString(string01);
+size_t length = string_get_length(str);
+puts(string_get_data(str));
 ```
+It provides some protection against malicious or accidental modifications of the internal components - meaning that the struct fields are only accessible through the getter functions.
+Other useful functions include:
+* `bool string_isvalid(string* str)` - checks whether the string actually ends with a '\0' character
+* `bool string_areequal(string* s1, string* s2)` - checks whether the two strings are equal
+* `string* string_concatenate(string* s1, string* s2)` - concatenates the two strings and returns it as a new one
+* `string* string_substring(string* s, size_t start_index, size_t end_index)` - creates a substring within the given interval
+* `bool string_issubstring(string* str, string* substr)` - checks whether `substr` is a substring of `str`
+* `bool string_contains_char(string* s, char c)` - checks if `c` is present in `s`
+As reading strings from the standard input in C is kind of a pain in the neck, the library comes with a few functions intended to facilitate the simple task of _asking for user input_ (or reading the contents of a file for that matter).
+* `string* sting_read(FILE* source, char* delimiters)` - allows the user to read from an input (be it a file or `stdio`) until it meets a delimiter character
+* `string* sting_read_line()` - reads from the standard input until the first '\n' character
+* `string* sting_read_word()` - reads from the standard input until you hit a space
 
-There are some auxiliary functions defined, not meant to be used by the general public.
-* `isValidString(string)`: checks whether the string's terminating character is equal to `\0`.
-* `isDelimiter(char, delimiters)`: equivalent to `strchr`
-* `stringCompare(string_1, string_2)`: takes pointer variables of type `String` and compares them similarly how `strcmmp` does
-* `stringSegment(string, start_index, end_index)`: creates a substring of a string from the given range of characters
-
-
-### StringArray
+### strarr
 `StringArray` has the following characteristics:
 * individual elements can be accessed: `strArr->tokens[i]`
   * we can also access it's "lower level" components: `strArr->tokens[i]->string[j]`
