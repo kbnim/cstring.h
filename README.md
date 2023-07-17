@@ -15,6 +15,7 @@ size_t length = string_get_length(str);
 puts(string_get_data(str));
 ```
 It provides some protection against malicious or accidental modifications of the internal components - meaning that the struct fields are only accessible through the getter functions.
+
 Other useful functions include:
 * `bool string_isvalid(string* str)` - checks whether the string actually ends with a '\0' character
 * `bool string_areequal(string* s1, string* s2)` - checks whether the two strings are equal
@@ -22,74 +23,65 @@ Other useful functions include:
 * `string* string_substring(string* s, size_t start_index, size_t end_index)` - creates a substring within the given interval
 * `bool string_issubstring(string* str, string* substr)` - checks whether `substr` is a substring of `str`
 * `bool string_contains_char(string* s, char c)` - checks if `c` is present in `s`
+
 As reading strings from the standard input in C is kind of a pain in the neck, the library comes with a few functions intended to facilitate the simple task of _asking for user input_ (or reading the contents of a file for that matter).
 * `string* sting_read(FILE* source, char* delimiters)` - allows the user to read from an input (be it a file or `stdio`) until it meets a delimiter character
 * `string* sting_read_line()` - reads from the standard input until the first '\n' character
 * `string* sting_read_word()` - reads from the standard input until you hit a space
 
+As an example, reading a file line by line may be achieved like so:
+```c
+FILE* source = fopen("filename", "r");
+// assume the file exists
+string* line;
+while ((line = string_read(source, "\n") != NULL)) {
+ // perform actions using the received line
+ delete_string(line);
+}
+delete_string(line);
+// Note that we need to deallocate it, as it broke out of the loop
+```
+
 ### strarr
-`StringArray` has the following characteristics:
-* individual elements can be accessed: `strArr->tokens[i]`
-  * we can also access it's "lower level" components: `strArr->tokens[i]->string[j]`
-  * any element can be modified, just like in a regular array
-* number of elements: `strArr->count`
-* like a traditional array, it's size cannot be modified - no elements can be added or removed
-
-Note that they're _used as a pointer_ (just like above), even though their name suggests otherwise. Keep in mind that the **number of elements must be declared** when initialising them. The function has no way of checking whether the number of stings correspond to the given integer value, so it remains the programmer's responsibility.
+`strarr` (a contraction of _string array_) is a singly linked list implementation to store strings. It is used dynamically.
 ```c
-StringArray* strArr = newStringArray(2, newString("Hello"), newString("World"));
-````
-
-Deletion is mandatory to avoid memory leak.
+strarr* array = new_strarr();
+// ...
+delete_strarr(array);
+```
+Insertion of elements can be accompliushed the following ways:
 ```c
-deleteStringArray(strArr);
+strarr_append(s1, &array);  // to the end of the list
+strarr_prepend(s2, &array); // to the front of the list
+strarr_insert_at(s3, index, &array); // insert an element to a specified index
 ```
 
-Auxiliary functions:
-* `splitString(char*, delimiters)`: splits the given `char*` string along the given delimiters
-* `printStringArray(string, bool)`: prints out the contents of the array, with or without indices
-* `countTokens(string, delimiters)`: counts how many tokens can be found in the string - used for background operations
-
-### StringList
-
-`StringList` has the following features:
-* it uses a singly linked list with a head (`StringH1L`)
-  * it stores the node, the index of the node and a pointer to the next node
-* it stores the number of elements in the list
-
-Note that when you "instantiate" a `StringList`, it creates an empty list.
+The same goes for the removal of elements.
 ```c
-StringList* strList = newStringList();
+string* s1 = strarr_remove_last(&array); 
+string* s2 = strarr_remove_first(&array); 
+string* s3 = strarr_remove_at(index, &array);
 ```
 
-These are the following ways to add a new element to a list.
+Looping through requires a helper type called `strnode`. On its own, it cannot be instantiated nor can it be removed, as it's meant to be as an implementation detail. However, with the help of an `strnode` pointer, we can loop through a list the following ways:
+1. Using a while loop
 ```c
-appendToList(strList, "appended element");   // adds string to the end of the list
-prependToList(strList, "prepended element"); // adds string to the beginning of the list
-insertToList(strList, "inserted element");   // adds string to the given index and moves the rest
+strnode* i = strarr_get_first(array);
+while (i != NULL) {
+ // perform actions using the list
+ i = strnode_get_next(i);
+}
 ```
 
-It's possible to remove an element at a given index.
+2. Using a for loop
 ```c
-removeFromList(strList, 1);
+for (strnode* i = strarr_get_first(); i != NULL; i = strnode_get_next(i)) {
+ // perform actions using the list
+}
 ```
-
-The entire string can be accessed through an index.
-```c
-String* stringInList = listAtIndex(strList, 1);
-puts(stringInList->string);
-```
-
-Deletion is similar to those discussed above
-```c
-deleteStringList(strList);
-```
-Other functions include:
-* `printStringList(list, bool)`: prints the contents of the list, including or excluding indices
-* `refactorIndices(list)`: resets the indices of the list starting from `0` to `list->count - 1`
 
 ## Installation
 Coming soon.
 
 ## Further ideas
-* coming soon
+* Query any element of the list by referring to its index
