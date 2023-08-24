@@ -1,4 +1,6 @@
 # cstring.h
+**ATTENTION**: THIS PROJECT HAS BEEN MOVED TO THE "DATASTRUCTS.H" REPOSITORY UNDER MY ACCOUNT. WHAT YOU SEE HERE ARE THE REMNANTS OF THE OLD CODE BASE (THAT HAS BEED LARGELY REWRITTEN ANYWAY).
+
 `cstring.h` is an attempt to implement a practical string type in C. The library contains the following type definitions: `string` and `strarr` (a linked list of strings).
 
 ## Features
